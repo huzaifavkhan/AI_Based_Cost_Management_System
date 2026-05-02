@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>FL Client Monitor</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #0f1117;
+    color: #e2e8f0;
+    min-height: 100vh;
+    padding: 24px;
+  }
+
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+  }
+
+  header h1 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  header h1 span { color: #6366f1; }
+
+  #refresh-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.8rem;
+    color: #64748b;
+  }
+
+  #last-update { font-variant-numeric: tabular-nums; }
+
+  .btn {
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: opacity .15s;
+  }
+  .btn:hover { opacity: .8; }
+  .btn-primary { background: #6366f1; color: #fff; }
+  .btn-danger  { background: #ef4444; color: #fff; }
+  .btn-ghost   { background: #1e293b; color: #94a3b8; border: 1px solid #334155; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
+  }
+
+  .card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    transition: border-color .2s;
+  }
+  .card.online  { border-color: #22c55e44; }
+  .card.offline { border-color: #ef444444; }
+  .card.loading { border-color: #334155; }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .client-name {
+    font-size: 1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .dot {
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .dot.green  { background: #22c55e; box-shadow: 0 0 6px #22c55e88; }
+  .dot.red    { background: #ef4444; box-shadow: 0 0 6px #ef444488; }
+  .dot.gray   { background: #475569; }
+  .dot.pulse  { animation: pulse 1.4s ease-in-out infinite; }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: .35; }
+  }
+
+  .badge {
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+  }
+  .badge.online  { background: #14532d; color: #4ade80; }
+  .badge.offline { background: #450a0a; color: #fca5a5; }
+  .badge.loading { background: #1e3a5f; color: #93c5fd; }
+
+  .port-tag {
+    font-size: 0.72rem;
+    color: #475569;
+    font-family: monospace;
+  }
+
+  .stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .stat {
+    background: #0f1117;
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+
+  .stat-label {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: #64748b;
+    margin-bottom: 4px;
+  }
+
+  .stat-value {
+    font-size: 0.95rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .stat-value.highlight { color: #818cf8; }
+  .stat-value.warn      { color: #f59e0b; }
+
+  .anomaly-bar-wrap {
+    width: 100%;
+  }
+
+  .anomaly-bar-wrap .bar-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.72rem;
+    color: #64748b;
+    margin-bottom: 5px;
+  }
+
+  .bar-track {
+    height: 6px;
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    transition: width .5s ease;
+    background: linear-gradient(90deg, #6366f1, #ec4899);
+  }
+
+  .amount-range {
+    font-family: monospace;
+    font-size: 0.82rem;
+    color: #94a3b8;
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid #334155;
+    padding-top: 12px;
+    font-size: 0.75rem;
+    color: #475569;
+  }
+
+  .error-msg {
+    font-size: 0.78rem;
+    color: #f87171;
+    background: #450a0a22;
+    border: 1px solid #ef444433;
+    border-radius: 6px;
+    padding: 8px 10px;
+  }
+
+  .skeleton {
+    background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+    border-radius: 6px;
+    height: 14px;
+  }
+  @keyframes shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  #global-actions {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .section-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: #475569;
+    margin-bottom: 8px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>FL Client <span>Monitor</span></h1>
+  <div id="refresh-bar">
+    <span>Auto-refresh every <strong>4 s</strong></span>
+    <span>Last update: <span id="last-update">—</span></span>
+    <button class="btn btn-ghost" onclick="pollAll()">Refresh now</button>
+  </div>
+</header>
+
+<div id="global-actions">
+  <button class="btn btn-danger" onclick="resetAll()">Reset all clients</button>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<script>
+const CLIENTS = [
+  { id: "client_a", port: 8001 },
+  { id: "client_b", port: 8002 },
+  { id: "client_c", port: 8003 },
+];
+
+// State per client
+const state = {};
+CLIENTS.forEach(c => {
+  state[c.id] = { status: "loading", info: null, error: null, lastSeen: null };
+});
+
+// ── Render ──────────────────────────────────────────────────────────────────
+
+function fmt(n, dec = 0) {
+  if (n == null) return "—";
+  return Number(n).toLocaleString("en-US", { maximumFractionDigits: dec });
+}
+
+function fmtPct(r) {
+  if (r == null) return "—";
+  return (r * 100).toFixed(1) + "%";
+}
+
+function fmtTime(ts) {
+  if (!ts) return "never";
+  return new Date(ts).toLocaleTimeString();
+}
+
+function renderCard(client) {
+  const s = state[client.id];
+  const url = `http://localhost:${client.port}`;
+
+  const dotClass = s.status === "online"  ? "green"
+                 : s.status === "loading" ? "gray pulse"
+                 : "red";
+  const cardClass  = s.status;
+  const badgeClass = s.status;
+
+  let body = "";
+
+  if (s.status === "loading") {
+    body = `
+      <div class="stat-grid">
+        ${[1,2,3,4].map(() => `<div class="stat"><div class="skeleton"></div></div>`).join("")}
+      </div>`;
+  } else if (s.status === "offline") {
+    body = `<div class="error-msg">⚠ ${s.error || "Connection refused"}</div>`;
+  } else {
+    const info = s.info;
+    const anomalyPct = info.anomaly_rate != null ? info.anomaly_rate * 100 : 0;
+
+    body = `
+      <div class="stat-grid">
+        <div class="stat">
+          <div class="stat-label">Sector</div>
+          <div class="stat-value highlight">${info.sector || "—"}</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Samples</div>
+          <div class="stat-value">${fmt(info.n_samples)}</div>
+        </div>
+        <div class="stat" style="grid-column:1/-1">
+          <div class="stat-label">Invoice amount range</div>
+          <div class="stat-value amount-range">
+            $${fmt(info.amount_range?.[0], 0)} – $${fmt(info.amount_range?.[1], 0)}
+          </div>
+        </div>
+      </div>
+
+      <div class="anomaly-bar-wrap">
+        <div class="bar-label">
+          <span>Anomaly rate</span>
+          <span class="stat-value warn" style="font-size:.85rem">${fmtPct(info.anomaly_rate)}</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill" style="width:${Math.min(anomalyPct * 5, 100)}%"></div>
+        </div>
+      </div>`;
+  }
+
+  return `
+    <div class="card ${cardClass}" id="card-${client.id}">
+      <div class="card-header">
+        <div class="client-name">
+          <div class="dot ${dotClass}"></div>
+          ${client.id.replace("_", " ").toUpperCase()}
+        </div>
+        <span class="badge ${badgeClass}">${s.status}</span>
+      </div>
+
+      <div class="port-tag">${url}</div>
+
+      ${body}
+
+      <div class="card-footer">
+        <span>Last seen: ${fmtTime(s.lastSeen)}</span>
+        <button class="btn btn-ghost" style="font-size:.72rem;padding:4px 10px"
+                onclick="resetClient('${client.id}', ${client.port})">
+          Reset
+        </button>
+      </div>
+    </div>`;
+}
+
+function render() {
+  const grid = document.getElementById("grid");
+  grid.innerHTML = CLIENTS.map(renderCard).join("");
+  document.getElementById("last-update").textContent = new Date().toLocaleTimeString();
+}
+
+// ── Polling ─────────────────────────────────────────────────────────────────
+
+async function pollClient(client) {
+  const base = `http://localhost:${client.port}`;
+  try {
+    const [healthRes, infoRes] = await Promise.all([
+      fetch(`${base}/health`, { signal: AbortSignal.timeout(2500) }),
+      fetch(`${base}/info`,   { signal: AbortSignal.timeout(2500) }),
+    ]);
+    if (!healthRes.ok) throw new Error(`health ${healthRes.status}`);
+    const info = await infoRes.json();
+    state[client.id] = { status: "online", info, error: null, lastSeen: Date.now() };
+  } catch (err) {
+    state[client.id] = {
+      status:   "offline",
+      info:     null,
+      error:    err.message || "Unreachable",
+      lastSeen: state[client.id].lastSeen,
+    };
+  }
+}
+
+async function pollAll() {
+  await Promise.all(CLIENTS.map(pollClient));
+  render();
+}
+
+async function resetClient(id, port) {
+  try {
+    await fetch(`http://localhost:${port}/reset`, { method: "POST", signal: AbortSignal.timeout(3000) });
+  } catch (_) {}
+  await pollClient(CLIENTS.find(c => c.id === id));
+  render();
+}
+
+async function resetAll() {
+  await Promise.all(CLIENTS.map(c =>
+    fetch(`http://localhost:${c.port}/reset`, { method: "POST", signal: AbortSignal.timeout(3000) })
+      .catch(() => {})
+  ));
+  await pollAll();
+}
+
+// ── Boot ─────────────────────────────────────────────────────────────────────
+render();          // show skeletons immediately
+pollAll();         // first real poll
+setInterval(pollAll, 4000);
+</script>
+</body>
+</html>

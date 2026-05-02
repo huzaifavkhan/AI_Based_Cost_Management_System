@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Federated Learning — Visual Simulation</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:          #0f1117;
+      --surface:     #1e293b;
+      --border:      #334155;
+      --text:        #e2e8f0;
+      --muted:       #64748b;
+      --dim:         #475569;
+      --accent:      #6366f1;
+      --accent-hi:   #818cf8;
+      --pink:        #ec4899;
+      --green:       #22c55e;
+      --amber:       #f59e0b;
+      --red:         #ef4444;
+      --blue:        #3b82f6;
+      --radius:      12px;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      padding: 0;
+    }
+
+    /* ── HEADER ── */
+    header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      padding: 14px 24px;
+      background: #12161f;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-title {
+      display: flex;
+      flex-direction: column;
+      margin-right: 8px;
+    }
+
+    .header-title h1 {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      color: var(--text);
+    }
+
+    .header-title p {
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    #round-display {
+      font-size: 0.85rem;
+      font-weight: 700;
+      font-family: monospace;
+      color: var(--accent-hi);
+      background: rgba(99,102,241,0.12);
+      padding: 5px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(99,102,241,0.3);
+      min-width: 110px;
+      text-align: center;
+    }
+
+    .phase-badge {
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 999px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .phase-badge.idle        { background: #1e293b; color: var(--muted); }
+    .phase-badge.training    { background: #1e3a5f; color: #93c5fd; }
+    .phase-badge.uploading   { background: #2a1c0e; color: #fb923c; }
+    .phase-badge.aggregating { background: #14532d; color: #4ade80; }
+    .phase-badge.broadcast   { background: #2e1065; color: #a78bfa; }
+    .phase-badge.done        { background: #1a1f2e; color: var(--accent-hi); }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: auto;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 14px;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.15s, background 0.15s;
+      white-space: nowrap;
+    }
+
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-primary  { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .btn-primary:hover:not(:disabled) { background: #4f51e8; }
+    .btn-ghost    { background: transparent; color: var(--text); border-color: var(--border); }
+    .btn-ghost:hover:not(:disabled) { background: var(--surface); }
+    .btn-danger   { background: transparent; color: var(--red); border-color: var(--red); }
+    .btn-danger:hover:not(:disabled) { background: rgba(239,68,68,0.1); }
+
+    select.speed-select {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 5px 10px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      outline: none;
+    }
+
+    /* ── MAIN LAYOUT ── */
+    #sim-layout {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 16px;
+      flex: 1;
+      padding: 16px 20px;
+      min-height: 0;
+    }
+
+    #scene-wrap {
+      position: relative;
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      min-height: 500px;
+    }
+
+    #scene-canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* ── METRICS SIDEBAR ── */
+    #metrics-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: 0;
+      overflow-y: auto;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+    }
+
+    .card-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    #metrics-canvas {
+      display: block;
+      width: 100%;
+      height: 180px;
+    }
+
+    .chart-legend {
+      display: flex;
+      gap: 14px;
+      margin-top: 8px;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    .legend-dot {
+      display: inline-block;
+      width: 10px;
+      height: 3px;
+      border-radius: 2px;
+      margin-right: 4px;
+      vertical-align: middle;
+    }
+
+    /* ── LIVE STATS ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .stat-item {
+      background: #151c2b;
+      border-radius: 8px;
+      padding: 8px 10px;
+    }
+
+    .stat-label {
+      font-size: 0.67rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      margin-bottom: 2px;
+    }
+
+    .stat-value {
+      font-size: 1.05rem;
+      font-weight: 700;
+      font-family: monospace;
+      color: var(--text);
+    }
+
+    .stat-value.green { color: var(--green); }
+    .stat-value.amber { color: var(--amber); }
+    .stat-value.accent { color: var(--accent-hi); }
+
+    /* ── EVENT LOG ── */
+    #event-log {
+      max-height: 160px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+
+    .log-entry {
+      font-size: 0.72rem;
+      color: #94a3b8;
+      padding: 3px 0;
+      border-bottom: 1px solid #151c2b;
+    }
+
+    .log-time {
+      color: var(--dim);
+      font-family: monospace;
+      margin-right: 6px;
+      font-size: 0.68rem;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      font-size: 0.68rem;
+      color: var(--dim);
+      padding: 8px 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      #sim-layout {
+        grid-template-columns: 1fr;
+      }
+      #scene-wrap {
+        height: 380px;
+        min-height: unset;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-title">
+    <h1>Federated Learning Simulation</h1>
+    <p>LayoutLMv3 + LoRA (r=8) · FedAvg + FedProx (μ=0.01) · Differential Privacy (σ=0.5) · No raw data shared</p>
+  </div>
+  <div id="round-display">Round — / 15</div>
+  <span id="phase-badge" class="phase-badge idle">Idle</span>
+  <div class="controls">
+    <select class="speed-select" id="speed-select">
+      <option value="0.5">0.5×</option>
+      <option value="1" selected>1×</option>
+      <option value="2">2×</option>
+      <option value="4">4×</option>
+    </select>
+    <button class="btn btn-primary" id="btn-start">▶ Start</button>
+    <button class="btn btn-ghost"   id="btn-pause" disabled>⏸ Pause</button>
+    <button class="btn btn-danger"  id="btn-reset" disabled>↺ Reset</button>
+  </div>
+</header>
+
+<main id="sim-layout">
+  <section id="scene-wrap">
+    <canvas id="scene-canvas"></canvas>
+  </section>
+
+  <section id="metrics-panel">
+    <div class="card">
+      <div class="card-title">Model Performance</div>
+      <canvas id="metrics-canvas"></canvas>
+      <div class="chart-legend">
+        <span><span class="legend-dot" style="background:#22c55e"></span>Macro F1</span>
+        <span><span class="legend-dot" style="background:#f59e0b; display:inline-block; border-top: 2px dashed #f59e0b; height:0; width:10px; margin-right:4px; vertical-align:middle;"></span>Loss</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Round Statistics</div>
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-label">Round</div>
+          <div class="stat-value accent" id="stat-round">—</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Macro F1</div>
+          <div class="stat-value green" id="stat-acc">—</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Loss</div>
+          <div class="stat-value amber" id="stat-loss">—</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">LoRA |ΔW|</div>
+          <div class="stat-value" id="stat-dw">—</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">ε Budget</div>
+          <div class="stat-value" style="color:#fb923c" id="stat-eps">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="flex:1">
+      <div class="card-title">Event Log</div>
+      <div id="event-log"></div>
+    </div>
+  </section>
+</main>
+
+<footer>Simulation only — no real model weights or data are used</footer>
+
+<script>
+// ── CONFIG ──────────────────────────────────────────────────────────────
+const CFG = {
+  totalRounds:      15,
+  msTraining:      2000,
+  msUpload:        1800,
+  msAggregating:    900,
+  msBroadcast:     1500,
+  msBetween:        700,
+  uploadStagger:    220,
+  serverRadius:      36,
+  clientRadius:      28,
+  pulseMaxRadius:    80,
+};
+
+const CLR = {
+  bg:        '#0f1117',
+  surface:   '#1e293b',
+  border:    '#334155',
+  text:      '#e2e8f0',
+  muted:     '#64748b',
+  accent:    '#6366f1',
+  accentHi:  '#818cf8',
+  green:     '#22c55e',
+  amber:     '#f59e0b',
+  red:       '#ef4444',
+  blue:      '#3b82f6',
+  pink:      '#ec4899',
+};
+
+const CLIENT_DEFS = [
+  { label: 'Client 1', icon: '💻', sector: 'Retail (SROIE)' },
+  { label: 'Client 2', icon: '🖥',  sector: 'Finance (FACTURE)' },
+  { label: 'Client 3', icon: '💻', sector: 'Healthcare' },
+];
+
+// ── STATE ─────────────────────────────────────────────────────────────────
+let simState    = 'IDLE';
+let currentRound = 0;
+let paused      = false;
+let pauseStart  = 0;
+let phaseStart  = 0;
+let phaseElapsed = 0;
+let speedMul    = 1;
+let pendingIds  = [];
+let metricsHistory = [];
+let activeArrows   = [];
+let pulseRings     = [];
+let clients        = [];
+let server         = { x: 0, y: 0 };
+let lastTs         = 0;
+let animId         = null;
+let currentPhaseMetrics = null;
+
+// ── GEOMETRY ──────────────────────────────────────────────────────────────
+const sceneCanvas   = document.getElementById('scene-canvas');
+const sceneCtx      = sceneCanvas.getContext('2d');
+let   sceneDPR      = 1;
+let   sceneW        = 0;
+let   sceneH        = 0;
+
+function layoutNodes() {
+  const wrap = document.getElementById('scene-wrap');
+  const rect  = wrap.getBoundingClientRect();
+  sceneDPR = window.devicePixelRatio || 1;
+  sceneW   = rect.width;
+  sceneH   = rect.height;
+  sceneCanvas.width  = sceneW  * sceneDPR;
+  sceneCanvas.height = sceneH * sceneDPR;
+  sceneCtx.setTransform(sceneDPR, 0, 0, sceneDPR, 0, 0);
+
+  const cx = sceneW / 2;
+  const cy = sceneH / 2;
+  server = { x: cx, y: cy };
+
+  const r = Math.min(cx, cy) * 0.55;
+  const angles = [270, 30, 150];
+  clients = CLIENT_DEFS.map((def, i) => {
+    const rad = (angles[i] * Math.PI) / 180;
+    return {
+      ...def,
+      x: cx + r * Math.cos(rad),
+      y: cy + r * Math.sin(rad),
+      heatmap: new Float32Array(9).fill(0),
+      trainingProgress: 0,
+      trainingStagger: i * 200,
+      isActive: false,
+    };
+  });
+}
+
+function bezierCPs(from, to, idx) {
+  const mx = (from.x + to.x) / 2;
+  const my = (from.y + to.y) / 2;
+  const dx = to.x - from.x;
+  const dy = to.y - from.y;
+  const len = Math.hypot(dx, dy) || 1;
+  const nx = -dy / len;
+  const ny =  dx / len;
+  const sign = idx % 2 === 0 ? 1 : -1;
+  const curve = len * 0.28 * sign;
+  return {
+    cp1: { x: from.x + dx * 0.25 + nx * curve, y: from.y + dy * 0.25 + ny * curve },
+    cp2: { x: from.x + dx * 0.75 + nx * curve, y: from.y + dy * 0.75 + ny * curve },
+  };
+}
+
+function bezierPoint(t, p0, p1, p2, p3) {
+  const mt = 1 - t;
+  return {
+    x: mt*mt*mt*p0.x + 3*mt*mt*t*p1.x + 3*mt*t*t*p2.x + t*t*t*p3.x,
+    y: mt*mt*mt*p0.y + 3*mt*mt*t*p1.y + 3*mt*t*t*p2.y + t*t*t*p3.y,
+  };
+}
+
+function bezierTangent(t, p0, p1, p2, p3) {
+  const mt = 1 - t;
+  return {
+    x: 3*(mt*mt*(p1.x-p0.x) + 2*mt*t*(p2.x-p1.x) + t*t*(p3.x-p2.x)),
+    y: 3*(mt*mt*(p1.y-p0.y) + 2*mt*t*(p2.y-p1.y) + t*t*(p3.y-p2.y)),
+  };
+}
+
+// ── METRICS SIMULATION ────────────────────────────────────────────────────
+function gaussianNoise(mean, std) {
+  const u1 = Math.max(1e-10, Math.random());
+  const u2 = Math.random();
+  return mean + std * Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+}
+
+function simulateRoundMetrics(round) {
+  // Macro F1: realistic for LayoutLMv3 token classification on invoice NER
+  const base = 0.30, ceiling = 0.78, k = 0.32;
+  const detF1 = base + (ceiling - base) * (1 - Math.exp(-k * round));
+  const noiseStd = 0.025 * Math.exp(-0.10 * round);
+  const macroF1 = Math.min(0.88, Math.max(0.20, detF1 + gaussianNoise(0, noiseStd)));
+
+  // Per-class F1 for key invoice entities (B-/I- averaged)
+  const ENTITIES = ['VENDOR', 'DATE', 'TOTAL', 'INV_NO'];
+  const BASES     = [0.68, 0.52, 0.63, 0.38];
+  const CEILINGS  = [0.90, 0.82, 0.87, 0.70];
+  const KS        = [0.35, 0.28, 0.32, 0.24];
+  const perClassF1 = {};
+  ENTITIES.forEach((e, ei) => {
+    const det = BASES[ei] + (CEILINGS[ei] - BASES[ei]) * (1 - Math.exp(-KS[ei] * round));
+    perClassF1[e] = Math.min(0.97, Math.max(0.12, det + gaussianNoise(0, noiseStd * 1.6)));
+  });
+
+  // Loss: LayoutLMv3 cross-entropy starts higher due to label imbalance
+  const baseLoss = 2.2 * Math.exp(-0.28 * round) + 0.32;
+  const loss = Math.max(0.22, baseLoss + gaussianNoise(0, noiseStd * 3.2));
+
+  // Differential privacy epsilon (RDP accounting, ~0.42 per round with σ=0.5, clip=0.3)
+  const epsilon = round * 0.42 + gaussianNoise(0, 0.02);
+
+  // Per-client LoRA delta magnitudes (non-IID: Client 1 converges fastest)
+  const magnitudes = [0, 1, 2].map(i => {
+    const rate = 0.38 - i * 0.05;
+    return Math.max(0.02, Math.min(1, Math.exp(-rate * round) + gaussianNoise(0, 0.07)));
+  });
+
+  const paramChange = Math.sqrt(magnitudes.reduce((s, m) => s + m * m, 0));
+  return { round, macroF1, perClassF1, loss, epsilon, magnitudes, paramChange };
+}
+
+function updateClientHeatmaps(magnitudes) {
+  clients.forEach((c, i) => {
+    const mag = magnitudes[i];
+    for (let j = 0; j < 9; j++) {
+      c.heatmap[j] = c.heatmap[j] * 0.65 + mag * (0.5 + Math.random() * 0.5) * 0.35;
+      c.heatmap[j] = Math.max(0, Math.min(1, c.heatmap[j]));
+    }
+  });
+}
+
+// ── COLORS ────────────────────────────────────────────────────────────────
+function hexToRgb(hex) {
+  const r = parseInt(hex.slice(1,3), 16);
+  const g = parseInt(hex.slice(3,5), 16);
+  const b = parseInt(hex.slice(5,7), 16);
+  return [r, g, b];
+}
+
+function lerpColor(a, b, t) {
+  const [ar,ag,ab] = hexToRgb(a);
+  const [br,bg,bb] = hexToRgb(b);
+  const r = Math.round(ar + (br-ar)*t);
+  const g = Math.round(ag + (bg-ag)*t);
+  const bl = Math.round(ab + (bb-ab)*t);
+  return `rgb(${r},${g},${bl})`;
+}
+
+function magnitudeColor(mag, dir) {
+  if (dir === 'upload')    return lerpColor(CLR.blue, CLR.red, mag);
+  return CLR.accent;
+}
+
+// ── ARROWS ───────────────────────────────────────────────────────────────
+function spawnArrow(from, to, magnitude, direction, clientIdx) {
+  const { cp1, cp2 } = bezierCPs(from, to, clientIdx);
+  activeArrows.push({
+    from, to, cp1, cp2,
+    magnitude,
+    direction,
+    clientIdx,
+    dashOffset: 0,
+    done: false,
+  });
+}
+
+function drawArrows(dt) {
+  activeArrows = activeArrows.filter(a => !a.done);
+  activeArrows.forEach(a => {
+    if (paused) return;
+    a.dashOffset -= 1.8 * dt;
+
+    const ctx = sceneCtx;
+    const color = magnitudeColor(a.magnitude, a.direction);
+    const lw = 2 + a.magnitude * 4;
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(a.from.x, a.from.y);
+    ctx.bezierCurveTo(a.cp1.x, a.cp1.y, a.cp2.x, a.cp2.y, a.to.x, a.to.y);
+    ctx.setLineDash([12, 8]);
+    ctx.lineDashOffset = a.dashOffset;
+    ctx.strokeStyle = color;
+    ctx.lineWidth = lw;
+    ctx.globalAlpha = 0.85;
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.restore();
+
+      // arrowhead at tip
+    const tip   = bezierPoint(0.99, a.from, a.cp1, a.cp2, a.to);
+    const prev  = bezierPoint(0.96, a.from, a.cp1, a.cp2, a.to);
+    const angle = Math.atan2(tip.y - prev.y, tip.x - prev.x);
+    drawArrowhead(ctx, a.to.x, a.to.y, angle, color, 9 + a.magnitude * 3);
+
+    // label midpoint
+    const mid = bezierPoint(0.5, a.from, a.cp1, a.cp2, a.to);
+    ctx.save();
+    ctx.font = '8px monospace';
+    ctx.textAlign = 'center';
+    if (a.direction === 'upload') {
+      ctx.fillStyle = 'rgba(251,146,60,0.9)';
+      ctx.fillText('LoRA ΔW  🔒DP', mid.x, mid.y - 7);
+    } else {
+      ctx.fillStyle = 'rgba(129,140,248,0.9)';
+      ctx.fillText('global LoRA', mid.x, mid.y - 7);
+    }
+    ctx.restore();
+  });
+}
+
+function drawArrowhead(ctx, x, y, angle, color, size) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(angle);
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.lineTo(-size, -size * 0.4);
+  ctx.lineTo(-size, size * 0.4);
+  ctx.closePath();
+  ctx.fillStyle = color;
+  ctx.globalAlpha = 0.9;
+  ctx.fill();
+  ctx.restore();
+}
+
+// ── DRAWING ───────────────────────────────────────────────────────────────
+function drawScene(dt) {
+  const ctx = sceneCtx;
+  ctx.clearRect(0, 0, sceneW, sceneH);
+
+  // background guide lines
+  clients.forEach(c => {
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(server.x, server.y);
+    ctx.lineTo(c.x, c.y);
+    ctx.setLineDash([4, 6]);
+    ctx.strokeStyle = CLR.border;
+    ctx.lineWidth = 0.8;
+    ctx.globalAlpha = 0.5;
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.restore();
+  });
+
+  drawPulse(ctx, dt);
+  drawArrows(dt);
+  drawServerNode(ctx);
+  clients.forEach((c, i) => drawClientNode(ctx, c, i));
+}
+
+function drawServerNode(ctx) {
+  const { x, y } = server;
+  const r = CFG.serverRadius;
+
+  // glow when aggregating
+  if (simState === 'AGGREGATING') {
+    const grad = ctx.createRadialGradient(x, y, r * 0.5, x, y, r * 2.2);
+    grad.addColorStop(0, 'rgba(99,102,241,0.25)');
+    grad.addColorStop(1, 'rgba(99,102,241,0)');
+    ctx.beginPath();
+    ctx.arc(x, y, r * 2.2, 0, Math.PI * 2);
+    ctx.fillStyle = grad;
+    ctx.fill();
+  }
+
+  // circle
+  ctx.beginPath();
+  ctx.arc(x, y, r, 0, Math.PI * 2);
+  ctx.fillStyle = '#151d2e';
+  ctx.fill();
+  ctx.strokeStyle = CLR.accent;
+  ctx.lineWidth = 2.5;
+  ctx.stroke();
+
+  // icon
+  ctx.save();
+  ctx.font = `${r * 0.85}px sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('🗄', x, y + 1);
+  ctx.restore();
+
+  // label
+  ctx.save();
+  ctx.font = '600 11px Segoe UI, system-ui, sans-serif';
+  ctx.fillStyle = CLR.accentHi;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  ctx.fillText('Global Server', x, y + r + 7);
+
+  if (simState === 'AGGREGATING') {
+    ctx.font = '10px monospace';
+    ctx.fillStyle = '#4ade80';
+    ctx.fillText('FedAvg ▶  masked', x, y + r + 20);
+  }
+  ctx.restore();
+}
+
+function drawClientNode(ctx, c, idx) {
+  const { x, y } = c;
+  const r = CFG.clientRadius;
+
+  // glow when active
+  if (c.isActive) {
+    const grad = ctx.createRadialGradient(x, y, r * 0.3, x, y, r * 2);
+    grad.addColorStop(0, 'rgba(99,102,241,0.15)');
+    grad.addColorStop(1, 'rgba(99,102,241,0)');
+    ctx.beginPath();
+    ctx.arc(x, y, r * 2, 0, Math.PI * 2);
+    ctx.fillStyle = grad;
+    ctx.fill();
+  }
+
+  // circle
+  ctx.beginPath();
+  ctx.arc(x, y, r, 0, Math.PI * 2);
+  ctx.fillStyle = CLR.surface;
+  ctx.fill();
+  ctx.strokeStyle = c.isActive ? CLR.accentHi : CLR.border;
+  ctx.lineWidth = c.isActive ? 2.5 : 1.5;
+  ctx.stroke();
+
+  // icon
+  ctx.save();
+  ctx.font = `${r * 0.78}px sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(c.icon, x, y + 1);
+  ctx.restore();
+
+  // label
+  ctx.save();
+  ctx.font = '600 10px Segoe UI, system-ui, sans-serif';
+  ctx.fillStyle = CLR.text;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  ctx.fillText(c.label, x, y + r + 5);
+  ctx.font = '9px Segoe UI, system-ui, sans-serif';
+  ctx.fillStyle = CLR.muted;
+  ctx.fillText(c.sector, x, y + r + 17);
+  ctx.restore();
+
+  // training progress arc
+  if ((simState === 'LOCAL_TRAINING' || simState === 'UPLOADING') && c.trainingProgress > 0) {
+    const start = -Math.PI / 2;
+    const end   = start + Math.PI * 2 * Math.min(1, c.trainingProgress);
+    ctx.beginPath();
+    ctx.arc(x, y, r + 6, start, end);
+    ctx.strokeStyle = CLR.accent;
+    ctx.lineWidth = 3;
+    ctx.lineCap = 'round';
+    ctx.stroke();
+  }
+
+  // heatmap
+  drawHeatmap(ctx, c);
+}
+
+function drawHeatmap(ctx, c) {
+  if (c.heatmap.every(v => v === 0)) return;
+  const cellSize = 7, gap = 1, cols = 3;
+  const gridW = cols * cellSize + (cols - 1) * gap;
+  const gridH = gridW;
+  const gx = c.x + CFG.clientRadius * 0.55;
+  const gy = c.y - CFG.clientRadius * 1.05 - gridH;
+
+  ctx.save();
+  ctx.font = '7px monospace';
+  ctx.fillStyle = CLR.muted;
+  ctx.textAlign = 'left';
+  ctx.fillText('ΔW', gx, gy - 2);
+
+  for (let row = 0; row < 3; row++) {
+    for (let col = 0; col < 3; col++) {
+      const val = c.heatmap[row * 3 + col];
+      let color;
+      if (val > 0.75) {
+        color = lerpColor(CLR.accent, CLR.pink, (val - 0.75) / 0.25);
+      } else {
+        color = lerpColor('#1e293b', CLR.accent, val / 0.75);
+      }
+      ctx.fillStyle = color;
+      ctx.fillRect(
+        gx + col * (cellSize + gap),
+        gy + row * (cellSize + gap),
+        cellSize, cellSize
+      );
+    }
+  }
+
+  // border
+  ctx.strokeStyle = CLR.border;
+  ctx.lineWidth = 0.5;
+  ctx.strokeRect(gx - 0.5, gy - 0.5, gridW + 1, gridH + 1);
+  ctx.restore();
+}
+
+function drawPulse(ctx, dt) {
+  if (!paused) {
+    pulseRings.forEach(p => {
+      p.radius += 2.2 * dt;
+      p.opacity = Math.max(0, 1 - p.radius / CFG.pulseMaxRadius);
+    });
+    pulseRings = pulseRings.filter(p => p.radius < CFG.pulseMaxRadius);
+  }
+
+  pulseRings.forEach(p => {
+    ctx.beginPath();
+    ctx.arc(server.x, server.y, CFG.serverRadius + p.radius, 0, Math.PI * 2);
+    ctx.strokeStyle = `rgba(99,102,241,${p.opacity * 0.9})`;
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+  });
+}
+
+// ── METRICS CHART ─────────────────────────────────────────────────────────
+const metricsCanvas = document.getElementById('metrics-canvas');
+const metricsCtx    = metricsCanvas.getContext('2d');
+const CM = { top: 16, right: 16, bottom: 32, left: 44 };
+
+function drawMetricsChart() {
+  const wrap = metricsCanvas.parentElement;
+  const dpr  = window.devicePixelRatio || 1;
+  const w    = wrap.clientWidth - 28;
+  const h    = 180;
+  metricsCanvas.width  = w * dpr;
+  metricsCanvas.height = h * dpr;
+  metricsCanvas.style.width  = w + 'px';
+  metricsCanvas.style.height = h + 'px';
+  metricsCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  const ctx  = metricsCtx;
+  const pw   = w - CM.left - CM.right;
+  const ph   = h - CM.top - CM.bottom;
+
+  ctx.clearRect(0, 0, w, h);
+
+  // grid
+  for (let i = 0; i <= 4; i++) {
+    const gy = CM.top + ph - (ph / 4) * i;
+    ctx.beginPath();
+    ctx.moveTo(CM.left, gy);
+    ctx.lineTo(CM.left + pw, gy);
+    ctx.strokeStyle = CLR.border;
+    ctx.lineWidth = 0.6;
+    ctx.stroke();
+
+    ctx.fillStyle = CLR.muted;
+    ctx.font = '9px monospace';
+    ctx.textAlign = 'right';
+    ctx.fillText((i * 25) + 'F1', CM.left - 4, gy + 3);
+  }
+
+  if (metricsHistory.length < 2) {
+    // placeholder text
+    ctx.fillStyle = CLR.muted;
+    ctx.font = '11px Segoe UI, system-ui';
+    ctx.textAlign = 'center';
+    ctx.fillText('Start simulation to see metrics', CM.left + pw / 2, CM.top + ph / 2);
+    return;
+  }
+
+  const total = CFG.totalRounds;
+  function xPx(round) { return CM.left + (round / total) * pw; }
+  function yPxAcc(acc) { return CM.top + ph - acc * ph; }
+  function yPxLoss(loss) { return CM.top + ph - (loss / 2.0) * ph; }
+
+  // X axis labels
+  ctx.fillStyle = CLR.muted;
+  ctx.font = '9px monospace';
+  ctx.textAlign = 'center';
+  [1, 5, 10, 15].forEach(r => {
+    ctx.fillText('R' + r, xPx(r), h - CM.bottom + 14);
+  });
+
+  // loss line (dashed, right scale)
+  ctx.save();
+  ctx.beginPath();
+  metricsHistory.forEach((m, i) => {
+    const px = xPx(m.round), py = yPxLoss(m.loss);
+    i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+  });
+  ctx.setLineDash([4, 3]);
+  ctx.strokeStyle = CLR.amber;
+  ctx.lineWidth = 1.8;
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.restore();
+
+  // accuracy fill
+  ctx.save();
+  ctx.beginPath();
+  metricsHistory.forEach((m, i) => {
+    const px = xPx(m.round), py = yPxAcc(m.macroF1);
+    i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+  });
+  const lastM = metricsHistory[metricsHistory.length - 1];
+  ctx.lineTo(xPx(lastM.round), CM.top + ph);
+  ctx.lineTo(xPx(metricsHistory[0].round), CM.top + ph);
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(34,197,94,0.12)';
+  ctx.fill();
+  ctx.restore();
+
+  // macro F1 line
+  ctx.save();
+  ctx.beginPath();
+  metricsHistory.forEach((m, i) => {
+    const px = xPx(m.round), py = yPxAcc(m.macroF1);
+    i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+  });
+  ctx.strokeStyle = CLR.green;
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  ctx.restore();
+
+  // current point dot
+  const last = metricsHistory[metricsHistory.length - 1];
+  ctx.beginPath();
+  ctx.arc(xPx(last.round), yPxAcc(last.macroF1), 4, 0, Math.PI * 2);
+  ctx.fillStyle = CLR.green;
+  ctx.fill();
+
+  // right Y axis for loss
+  ctx.fillStyle = CLR.amber;
+  ctx.font = '9px monospace';
+  ctx.textAlign = 'left';
+  ['0', '1', '2'].forEach((v, i) => {
+    const gy = CM.top + ph - (i * 0.5) * ph;
+    ctx.fillText(v, CM.left + pw + 2, gy + 3);
+  });
+}
+
+// ── STATE MACHINE ─────────────────────────────────────────────────────────
+function safeTimeout(fn, ms) {
+  const id = setTimeout(fn, ms / speedMul);
+  pendingIds.push(id);
+  return id;
+}
+
+function clearPending() {
+  pendingIds.forEach(id => clearTimeout(id));
+  pendingIds = [];
+}
+
+function setState(s) {
+  simState = s;
+  const badge = document.getElementById('phase-badge');
+  const labels = {
+    IDLE:          ['Idle',            'idle'],
+    LOCAL_TRAINING:['Local Training',  'training'],
+    UPLOADING:     ['Uploading Weights','uploading'],
+    AGGREGATING:   ['FedAvg Aggregation','aggregating'],
+    BROADCASTING:  ['Broadcasting Model','broadcast'],
+    ROUND_COMPLETE:['Round Complete',  'idle'],
+    DONE:          ['Training Done ✓', 'done'],
+  };
+  const [text, cls] = labels[s] || ['Idle', 'idle'];
+  badge.textContent = text;
+  badge.className   = 'phase-badge ' + cls;
+}
+
+function startSimulation() {
+  document.getElementById('btn-start').disabled = true;
+  document.getElementById('btn-pause').disabled = false;
+  document.getElementById('btn-reset').disabled = false;
+  currentRound = 0;
+  metricsHistory = [];
+  activeArrows   = [];
+  pulseRings     = [];
+  clients.forEach(c => {
+    c.heatmap.fill(0);
+    c.trainingProgress = 0;
+    c.isActive = false;
+  });
+  appendLog('Simulation started — 3 clients, 15 rounds, LayoutLMv3+LoRA, FedAvg+FedProx, DP(σ=0.5, clip=0.3)');
+  startRound(1);
+}
+
+function startRound(n) {
+  currentRound = n;
+  document.getElementById('round-display').textContent = `Round ${n} / ${CFG.totalRounds}`;
+  appendLog(`── Round ${n} begin ──`);
+  phaseLocalTraining();
+}
+
+function phaseLocalTraining() {
+  setState('LOCAL_TRAINING');
+  appendLog('Clients fine-tuning LayoutLMv3-LoRA (1 epoch, AdamW, FedProx μ=0.01)…');
+  const start = Date.now();
+  clients.forEach(c => { c.trainingProgress = 0; c.isActive = true; });
+
+  function tick() {
+    if (paused) { safeTimeout(tick, 50); return; }
+    const elapsed = Date.now() - start;
+    const total   = CFG.msTraining / speedMul;
+    clients.forEach((c, i) => {
+      const adj = Math.max(0, elapsed - c.trainingStagger);
+      c.trainingProgress = Math.min(1, adj / (total - c.trainingStagger));
+    });
+    if (elapsed < total) {
+      safeTimeout(tick, 30);
+    }
+  }
+  tick();
+
+  safeTimeout(phaseUpload, CFG.msTraining);
+}
+
+function phaseUpload() {
+  setState('UPLOADING');
+  appendLog('Applying DP: clip LoRA ΔW (norm≤0.3) + Gaussian noise (σ=0.5)…');
+  appendLog('Sending noisy LoRA deltas (~295K params) to server…');
+
+  currentPhaseMetrics = simulateRoundMetrics(currentRound);
+
+  clients.forEach((c, i) => {
+    safeTimeout(() => {
+      const mag = currentPhaseMetrics.magnitudes[i];
+      spawnArrow(
+        { x: c.x, y: c.y },
+        { x: server.x, y: server.y },
+        mag, 'upload', i
+      );
+      appendLog(`${c.label} → Server  LoRA |ΔW|=${mag.toFixed(3)} (DP-noised)`);
+    }, CFG.uploadStagger * i);
+  });
+
+  safeTimeout(phaseAggregate, CFG.msUpload);
+}
+
+function phaseAggregate() {
+  setState('AGGREGATING');
+  clients.forEach(c => { c.isActive = false; c.trainingProgress = 0; });
+  appendLog('Pairwise masks cancelled — server sees only aggregate, not individual deltas');
+  appendLog('FedAvg: weighted sum by n_samples → updated global LoRA params');
+
+  // spawn pulse rings repeatedly
+  let pulsed = 0;
+  function spawnPulse() {
+    if (pulsed >= 3) return;
+    pulseRings.push({ radius: 0, opacity: 1 });
+    pulsed++;
+    if (pulsed < 3) safeTimeout(spawnPulse, 280);
+  }
+  spawnPulse();
+
+  safeTimeout(phaseBroadcast, CFG.msAggregating);
+}
+
+function phaseBroadcast() {
+  setState('BROADCASTING');
+  appendLog('Broadcasting updated LoRA adapter to all clients…');
+  updateClientHeatmaps(currentPhaseMetrics.magnitudes);
+
+  clients.forEach((c, i) => {
+    safeTimeout(() => {
+      spawnArrow(
+        { x: server.x, y: server.y },
+        { x: c.x, y: c.y },
+        0.6, 'broadcast', i
+      );
+      c.isActive = true;
+    }, CFG.uploadStagger * i);
+  });
+
+  safeTimeout(phaseRoundComplete, CFG.msBroadcast);
+}
+
+function phaseRoundComplete() {
+  setState('ROUND_COMPLETE');
+  const m = currentPhaseMetrics;
+  metricsHistory.push(m);
+  clients.forEach(c => { c.isActive = false; });
+
+  document.getElementById('stat-round').textContent = m.round;
+  document.getElementById('stat-acc').textContent   = (m.macroF1 * 100).toFixed(1) + '%';
+  document.getElementById('stat-loss').textContent  = m.loss.toFixed(4);
+  document.getElementById('stat-dw').textContent    = m.paramChange.toFixed(3);
+  document.getElementById('stat-eps').textContent   = m.epsilon.toFixed(2);
+
+  const pc = m.perClassF1;
+  appendLog(`Round ${m.round} done  macroF1=${(m.macroF1*100).toFixed(1)}%  loss=${m.loss.toFixed(3)}  ε=${m.epsilon.toFixed(2)}`);
+  appendLog(`  ↳ VENDOR=${(pc.VENDOR*100).toFixed(0)}%  DATE=${(pc.DATE*100).toFixed(0)}%  TOTAL=${(pc.TOTAL*100).toFixed(0)}%  INV_NO=${(pc.INV_NO*100).toFixed(0)}%`);
+  drawMetricsChart();
+
+  if (currentRound < CFG.totalRounds) {
+    safeTimeout(() => startRound(currentRound + 1), CFG.msBetween);
+  } else {
+    setState('DONE');
+    document.getElementById('btn-pause').disabled = true;
+    appendLog('✓ Training complete after 15 rounds — LoRA adapter ready for merging into base model');
+  }
+}
+
+// ── PAUSE / RESUME ────────────────────────────────────────────────────────
+function togglePause() {
+  const btn = document.getElementById('btn-pause');
+  if (!paused) {
+    paused = true;
+    pauseStart = Date.now();
+    btn.textContent = '▶ Resume';
+    appendLog('⏸ Paused');
+  } else {
+    paused = false;
+    btn.textContent = '⏸ Pause';
+    appendLog('▶ Resumed');
+  }
+}
+
+function resetSimulation() {
+  clearPending();
+  paused = false;
+  simState = 'IDLE';
+  currentRound = 0;
+  metricsHistory = [];
+  activeArrows   = [];
+  pulseRings     = [];
+  clients.forEach(c => {
+    c.heatmap.fill(0);
+    c.trainingProgress = 0;
+    c.isActive = false;
+  });
+  setState('IDLE');
+  document.getElementById('round-display').textContent = 'Round — / 15';
+  document.getElementById('btn-start').disabled  = false;
+  document.getElementById('btn-pause').disabled  = true;
+  document.getElementById('btn-pause').textContent = '⏸ Pause';
+  document.getElementById('btn-reset').disabled  = true;
+  document.getElementById('stat-round').textContent = '—';
+  document.getElementById('stat-acc').textContent   = '—';
+  document.getElementById('stat-loss').textContent  = '—';
+  document.getElementById('stat-dw').textContent    = '—';
+  document.getElementById('stat-eps').textContent   = '—';
+  document.getElementById('event-log').innerHTML = '';
+  drawMetricsChart();
+  appendLog('Simulation reset. Click Start to begin.');
+}
+
+// ── UI HELPERS ────────────────────────────────────────────────────────────
+function appendLog(msg) {
+  const log = document.getElementById('event-log');
+  const e   = document.createElement('div');
+  e.className = 'log-entry';
+  const t = new Date().toLocaleTimeString('en', { hour12: false });
+  e.innerHTML = `<span class="log-time">${t}</span>${msg}`;
+  log.appendChild(e);
+  log.scrollTop = log.scrollHeight;
+  while (log.children.length > 40) log.removeChild(log.firstChild);
+}
+
+// ── ANIMATION LOOP ────────────────────────────────────────────────────────
+function animationLoop(ts) {
+  const dt = Math.min((ts - lastTs) / 16.67, 3);
+  lastTs   = ts;
+  drawScene(paused ? 0 : dt);
+  requestAnimationFrame(animationLoop);
+}
+
+// ── RESIZE ────────────────────────────────────────────────────────────────
+const ro = new ResizeObserver(() => {
+  layoutNodes();
+  drawMetricsChart();
+});
+ro.observe(document.getElementById('scene-wrap'));
+
+// ── CONTROLS ─────────────────────────────────────────────────────────────
+document.getElementById('btn-start').addEventListener('click', startSimulation);
+document.getElementById('btn-pause').addEventListener('click', togglePause);
+document.getElementById('btn-reset').addEventListener('click', resetSimulation);
+document.getElementById('speed-select').addEventListener('change', e => {
+  speedMul = parseFloat(e.target.value);
+});
+
+// ── BOOT ──────────────────────────────────────────────────────────────────
+layoutNodes();
+drawMetricsChart();
+requestAnimationFrame(animationLoop);
+appendLog('Ready — 3 non-IID clients, LayoutLMv3+LoRA, FedAvg+FedProx, DP. Click Start.');
+</script>
+</body>
+</html>

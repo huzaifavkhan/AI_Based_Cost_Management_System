@@ -1,0 +1,9 @@
+contract_id,vendor_id,vendor_name,agreed_tax_rate,payment_terms,contract_start,contract_end
+CTR-V001,V001,Apex Office Supplies Ltd.,0.1,Due on Receipt,01/01/2024,31/12/2025
+CTR-V002,V002,TechCore Solutions Pvt.,0.1,Net 45,01/01/2024,31/12/2025
+CTR-V003,V003,Green Planet Cleaning Co.,0.1,Net 60,01/01/2024,31/12/2025
+CTR-V004,V004,National Utilities Corp.,0.1,Due on Receipt,01/01/2024,31/12/2025
+CTR-V005,V005,Premier Raw Materials Inc.,0.1,Net 30,01/01/2024,31/12/2025
+CTR-V006,V006,ProServ Consulting Group,0.1,Net 60,01/01/2024,31/12/2025
+CTR-V007,V007,FastTrack Logistics Ltd.,0.1,Net 45,01/01/2024,31/12/2025
+CTR-V008,V008,Horizon IT Equipment Co.,0.1,Net 60,01/01/2024,31/12/2025

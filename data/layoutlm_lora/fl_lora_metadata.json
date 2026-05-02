@@ -1,0 +1,50 @@
+{
+  "run_id": "20260423_180207",
+  "timestamp": "2026-04-23T22:48:41.412809",
+  "n_rounds": 1,
+  "final_macro_f1": 0.003786239723063609,
+  "per_class_f1_final": {},
+  "epsilon": 11.741748,
+  "delta": 1e-05,
+  "sigma": 0.5,
+  "clip_norm": 0.3,
+  "lora_r": 8,
+  "local_epochs": 1,
+  "mu": 0.01,
+  "device": "cpu",
+  "training_seconds": 17193.5,
+  "client_sizes": {
+    "client_a": 900,
+    "client_b": 499,
+    "client_c": 499
+  },
+  "privacy_report": {
+    "epsilon": 11.741748,
+    "delta": 1e-05,
+    "sigma": 0.5,
+    "clip_norm": 0.3,
+    "sampling_rate": 1.0,
+    "rounds_completed": 1,
+    "budget_status": "EXCEEDED",
+    "mechanism": "Subsampled Gaussian with RDP (Wang et al. 2019 / Balle et al. 2020)"
+  },
+  "round_history": [
+    {
+      "round": 1,
+      "macro_f1": 0.003786239723063609,
+      "per_class_f1": {},
+      "param_change": 49.29978892691731,
+      "epsilon": 11.741748,
+      "client_losses": {
+        "client_a": 0.056437444013430815,
+        "client_b": 0.17637297788487494,
+        "client_c": 0.1779420362752197
+      },
+      "client_f1s": {
+        "client_a": 0.998082658713251,
+        "client_b": 0.9650943396226415,
+        "client_c": 0.9643011371815172
+      }
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+
+# ── Virtual environments ──────────────────────────────────────────────────────
+venv/
+env/
+.venv/
+
+# ── Secrets ───────────────────────────────────────────────────────────────────
+.env
+
+# ── Model weights (too large for GitHub — see data/README.md) ─────────────────
+*.safetensors
+*.pt
+*.pth
+*.h5
+*.bin
+*.ckpt
+*.pkl
+
+# ── Training datasets (too large — see data/README.md) ───────────────────────
+data/real_invoices/
+data/synthetic_receipts/
+data/sample_invoices/
+data/extraction_cache/
+
+# ── Runtime database ──────────────────────────────────────────────────────────
+data/*.db
+
+# ── OS / editor ───────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# ── Logs & temp ───────────────────────────────────────────────────────────────
+*.log
+tmp/
+temp/

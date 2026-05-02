@@ -1,0 +1,15 @@
+{
+  "run_id": "FL-20260410-161448",
+  "trained_at": "2026-04-10T16:16:33.399303",
+  "n_rounds": 15,
+  "n_features": 7,
+  "model_type": "InvoiceAnomalyNet",
+  "final_f1": 0.3865,
+  "final_accuracy": 0.5938,
+  "epsilon": 0.586361,
+  "delta": 1e-05,
+  "sigma": 1.0,
+  "clip_norm": 1.3,
+  "model_version": "FL-20260410-161448",
+  "mode": "distributed"
+}

@@ -1,0 +1,51 @@
+po_number,vendor_id,vendor_name,category,item_description,quantity,unit_price,subtotal,tax_amount,grand_total,date_issued,payment_terms,status
+PO-2024-0001,V006,ProServ Consulting Group,Professional Services,Consulting Day Rate,5,1602.01,8010.05,801.01,8811.06,26/03/2024,Net 30,Active
+PO-2024-0002,V006,ProServ Consulting Group,Professional Services,Training Session,1,634.09,634.09,63.41,697.5,05/05/2024,Net 45,Active
+PO-2024-0003,V005,Premier Raw Materials Inc.,Raw Materials,PVC Pipe 3m,386,335.45,129483.7,12948.37,142432.07,20/10/2024,Due on Receipt,Active
+PO-2024-0004,V008,Horizon IT Equipment Co.,IT Equipment,Network Switch,9,1628.39,14655.51,1465.55,16121.06,18/01/2024,Net 45,Active
+PO-2024-0005,V006,ProServ Consulting Group,Professional Services,Audit Services,5,1199.66,5998.3,599.83,6598.13,05/07/2024,Net 30,Active
+PO-2024-0006,V001,Apex Office Supplies Ltd.,Office Supplies,A4 Paper Ream,101,68.56,6924.56,692.46,7617.02,29/05/2024,Net 30,Active
+PO-2024-0007,V006,ProServ Consulting Group,Professional Services,Consulting Day Rate,7,854.6,5982.2,598.22,6580.42,13/06/2024,2/10 Net 30,Active
+PO-2024-0008,V003,Green Planet Cleaning Co.,Cleaning Supplies,Floor Cleaner 5L,10,82.74,827.4,82.74,910.14,11/06/2024,Net 30,Active
+PO-2024-0009,V002,TechCore Solutions Pvt.,IT Equipment,"Monitor 24""",9,934.15,8407.35,840.74,9248.09,19/07/2024,Net 45,Active
+PO-2024-0010,V003,Green Planet Cleaning Co.,Cleaning Supplies,Disinfectant Spray,90,39.37,3543.3,354.33,3897.63,20/02/2024,2/10 Net 30,Active
+PO-2024-0011,V006,ProServ Consulting Group,Professional Services,Legal Advisory Fee,3,2580.17,7740.51,774.05,8514.56,01/06/2024,2/10 Net 30,Active
+PO-2024-0012,V008,Horizon IT Equipment Co.,IT Equipment,Laptop,8,1652.52,13220.16,1322.02,14542.18,24/06/2024,Due on Receipt,Active
+PO-2024-0013,V003,Green Planet Cleaning Co.,Cleaning Supplies,Disinfectant Spray,77,106.4,8192.8,819.28,9012.08,24/06/2024,Net 45,Active
+PO-2024-0014,V006,ProServ Consulting Group,Professional Services,Training Session,8,1142.92,9143.36,914.34,10057.7,26/03/2024,Net 45,Active
+PO-2024-0015,V006,ProServ Consulting Group,Professional Services,Training Session,10,2297.3,22973.0,2297.3,25270.3,06/05/2024,Net 45,Active
+PO-2024-0016,V005,Premier Raw Materials Inc.,Raw Materials,Steel Sheet 1m²,406,52.14,21168.84,2116.88,23285.72,11/03/2024,Net 45,Active
+PO-2024-0017,V006,ProServ Consulting Group,Professional Services,Training Session,10,785.87,7858.7,785.87,8644.57,28/07/2024,2/10 Net 30,Active
+PO-2024-0018,V004,National Utilities Corp.,Utilities,Electricity Bill,1,2108.79,2108.79,210.88,2319.67,15/10/2024,Net 60,Active
+PO-2024-0019,V006,ProServ Consulting Group,Professional Services,Consulting Day Rate,5,2456.44,12282.2,1228.22,13510.42,03/09/2024,Net 30,Active
+PO-2024-0020,V006,ProServ Consulting Group,Professional Services,Legal Advisory Fee,9,4606.83,41461.47,4146.15,45607.62,15/06/2024,2/10 Net 30,Active
+PO-2024-0021,V005,Premier Raw Materials Inc.,Raw Materials,PVC Pipe 3m,211,388.38,81948.18,8194.82,90143.0,17/10/2024,2/10 Net 30,Active
+PO-2024-0022,V001,Apex Office Supplies Ltd.,Office Supplies,File Folders,14,13.39,187.46,18.75,206.21,18/07/2024,Net 60,Active
+PO-2024-0023,V002,TechCore Solutions Pvt.,IT Equipment,USB Hub,19,1896.55,36034.45,3603.44,39637.89,27/02/2024,Due on Receipt,Active
+PO-2024-0024,V001,Apex Office Supplies Ltd.,Office Supplies,Ballpoint Pen Set,178,40.65,7235.7,723.57,7959.27,22/10/2024,Net 45,Active
+PO-2024-0025,V003,Green Planet Cleaning Co.,Cleaning Supplies,Disinfectant Spray,74,93.08,6887.92,688.79,7576.71,26/04/2024,Net 60,Active
+PO-2024-0026,V004,National Utilities Corp.,Utilities,Water Supply,1,538.81,538.81,53.88,592.69,09/05/2024,Net 30,Active
+PO-2024-0027,V003,Green Planet Cleaning Co.,Cleaning Supplies,Disinfectant Spray,80,34.22,2737.6,273.76,3011.36,20/02/2024,Net 30,Active
+PO-2024-0028,V002,TechCore Solutions Pvt.,IT Equipment,Laptop,11,188.17,2069.87,206.99,2276.86,15/05/2024,Net 60,Active
+PO-2024-0029,V006,ProServ Consulting Group,Professional Services,Legal Advisory Fee,9,1095.4,9858.6,985.86,10844.46,02/11/2024,2/10 Net 30,Active
+PO-2024-0030,V004,National Utilities Corp.,Utilities,Water Supply,1,733.15,733.15,73.31,806.46,04/03/2024,Due on Receipt,Active
+PO-2024-0031,V003,Green Planet Cleaning Co.,Cleaning Supplies,Trash Bags 100pc,64,105.02,6721.28,672.13,7393.41,11/02/2024,Net 30,Active
+PO-2024-0032,V001,Apex Office Supplies Ltd.,Office Supplies,Stapler,37,23.65,875.05,87.5,962.55,21/04/2024,2/10 Net 30,Active
+PO-2024-0033,V004,National Utilities Corp.,Utilities,Water Supply,1,979.93,979.93,97.99,1077.92,21/05/2024,Net 30,Active
+PO-2024-0034,V004,National Utilities Corp.,Utilities,Electricity Bill,1,2913.19,2913.19,291.32,3204.51,15/05/2024,Net 45,Active
+PO-2024-0035,V004,National Utilities Corp.,Utilities,Water Supply,1,2621.02,2621.02,262.1,2883.12,14/02/2024,Net 45,Active
+PO-2024-0036,V004,National Utilities Corp.,Utilities,Water Supply,1,2794.25,2794.25,279.43,3073.68,03/09/2024,Net 60,Active
+PO-2024-0037,V004,National Utilities Corp.,Utilities,Gas Bill,1,1030.78,1030.78,103.08,1133.86,13/02/2024,2/10 Net 30,Active
+PO-2024-0038,V006,ProServ Consulting Group,Professional Services,Audit Services,1,725.64,725.64,72.56,798.2,15/09/2024,2/10 Net 30,Active
+PO-2024-0039,V005,Premier Raw Materials Inc.,Raw Materials,Steel Sheet 1m²,280,67.65,18942.0,1894.2,20836.2,19/04/2024,Net 30,Active
+PO-2024-0040,V005,Premier Raw Materials Inc.,Raw Materials,PVC Pipe 3m,226,86.35,19515.1,1951.51,21466.61,01/11/2024,Net 45,Active
+PO-2024-0041,V005,Premier Raw Materials Inc.,Raw Materials,Steel Sheet 1m²,234,338.97,79318.98,7931.9,87250.88,30/10/2024,2/10 Net 30,Active
+PO-2024-0042,V003,Green Planet Cleaning Co.,Cleaning Supplies,Disinfectant Spray,90,88.78,7990.2,799.02,8789.22,16/05/2024,Net 60,Active
+PO-2024-0043,V004,National Utilities Corp.,Utilities,Internet Service,1,1085.3,1085.3,108.53,1193.83,21/02/2024,Net 30,Active
+PO-2024-0044,V004,National Utilities Corp.,Utilities,Electricity Bill,1,1616.48,1616.48,161.65,1778.13,22/03/2024,Net 60,Active
+PO-2024-0045,V001,Apex Office Supplies Ltd.,Office Supplies,Stapler,82,16.83,1380.06,138.01,1518.07,19/10/2024,Net 60,Active
+PO-2024-0046,V005,Premier Raw Materials Inc.,Raw Materials,Copper Wire Spool,497,341.79,169869.63,16986.96,186856.59,23/03/2024,Net 60,Active
+PO-2024-0047,V001,Apex Office Supplies Ltd.,Office Supplies,Whiteboard Marker,49,25.43,1246.07,124.61,1370.68,01/05/2024,Net 60,Active
+PO-2024-0048,V008,Horizon IT Equipment Co.,IT Equipment,Network Switch,16,539.69,8635.04,863.5,9498.54,10/02/2024,Net 30,Active
+PO-2024-0049,V006,ProServ Consulting Group,Professional Services,Audit Services,1,515.96,515.96,51.6,567.56,21/03/2024,Net 60,Active
+PO-2024-0050,V008,Horizon IT Equipment Co.,IT Equipment,Network Switch,14,1143.77,16012.78,1601.28,17614.06,12/03/2024,Net 30,Active

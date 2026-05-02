@@ -1,0 +1,46 @@
+gr_number,po_number,vendor_name,item_description,quantity_ordered,quantity_received,date_received,condition,received_by
+GR-2024-0001,PO-2024-0001,ProServ Consulting Group,Consulting Day Rate,5,5,07/04/2024,Damaged - partial,Sara Khan
+GR-2024-0002,PO-2024-0002,ProServ Consulting Group,Training Session,1,1,08/05/2024,Good,Bilal Adnan
+GR-2024-0004,PO-2024-0004,Horizon IT Equipment Co.,Network Switch,9,9,24/01/2024,Good,Bilal Adnan
+GR-2024-0005,PO-2024-0005,ProServ Consulting Group,Audit Services,5,5,20/07/2024,Damaged - partial,Usman Ali
+GR-2024-0006,PO-2024-0006,Apex Office Supplies Ltd.,A4 Paper Ream,101,101,12/06/2024,Good,Sara Khan
+GR-2024-0007,PO-2024-0007,ProServ Consulting Group,Consulting Day Rate,7,7,28/06/2024,Damaged - partial,Ahmad Raza
+GR-2024-0008,PO-2024-0008,Green Planet Cleaning Co.,Floor Cleaner 5L,10,10,16/06/2024,Good,Zainab Mir
+GR-2024-0009,PO-2024-0009,TechCore Solutions Pvt.,"Monitor 24""",9,9,03/08/2024,Good,Bilal Adnan
+GR-2024-0011,PO-2024-0011,ProServ Consulting Group,Legal Advisory Fee,3,3,06/06/2024,Good,Zainab Mir
+GR-2024-0012,PO-2024-0012,Horizon IT Equipment Co.,Laptop,8,8,10/07/2024,Good,Sara Khan
+GR-2024-0013,PO-2024-0013,Green Planet Cleaning Co.,Disinfectant Spray,77,77,10/07/2024,Good,Bilal Adnan
+GR-2024-0014,PO-2024-0014,ProServ Consulting Group,Training Session,8,8,11/04/2024,Good,Sara Khan
+GR-2024-0015,PO-2024-0015,ProServ Consulting Group,Training Session,10,10,09/05/2024,Damaged - partial,Bilal Adnan
+GR-2024-0016,PO-2024-0016,Premier Raw Materials Inc.,Steel Sheet 1m²,406,406,18/03/2024,Good,Bilal Adnan
+GR-2024-0017,PO-2024-0017,ProServ Consulting Group,Training Session,10,10,10/08/2024,Good,Ahmad Raza
+GR-2024-0018,PO-2024-0018,National Utilities Corp.,Electricity Bill,1,1,19/10/2024,Good,Sara Khan
+GR-2024-0019,PO-2024-0019,ProServ Consulting Group,Consulting Day Rate,5,5,15/09/2024,Good,Ahmad Raza
+GR-2024-0020,PO-2024-0020,ProServ Consulting Group,Legal Advisory Fee,9,9,19/06/2024,Good,Bilal Adnan
+GR-2024-0021,PO-2024-0021,Premier Raw Materials Inc.,PVC Pipe 3m,211,211,26/10/2024,Good,Zainab Mir
+GR-2024-0022,PO-2024-0022,Apex Office Supplies Ltd.,File Folders,14,14,04/08/2024,Good,Ahmad Raza
+GR-2024-0023,PO-2024-0023,TechCore Solutions Pvt.,USB Hub,19,19,12/03/2024,Good,Bilal Adnan
+GR-2024-0025,PO-2024-0025,Green Planet Cleaning Co.,Disinfectant Spray,74,81,05/05/2024,Good,Usman Ali
+GR-2024-0026,PO-2024-0026,National Utilities Corp.,Water Supply,1,1,17/05/2024,Good,Bilal Adnan
+GR-2024-0027,PO-2024-0027,Green Planet Cleaning Co.,Disinfectant Spray,80,80,02/03/2024,Damaged - partial,Bilal Adnan
+GR-2024-0028,PO-2024-0028,TechCore Solutions Pvt.,Laptop,11,11,24/05/2024,Good,Sara Khan
+GR-2024-0029,PO-2024-0029,ProServ Consulting Group,Legal Advisory Fee,9,9,11/11/2024,Damaged - partial,Sara Khan
+GR-2024-0030,PO-2024-0030,National Utilities Corp.,Water Supply,1,1,16/03/2024,Damaged - partial,Usman Ali
+GR-2024-0031,PO-2024-0031,Green Planet Cleaning Co.,Trash Bags 100pc,64,61,27/02/2024,Good,Zainab Mir
+GR-2024-0032,PO-2024-0032,Apex Office Supplies Ltd.,Stapler,37,37,06/05/2024,Good,Zainab Mir
+GR-2024-0033,PO-2024-0033,National Utilities Corp.,Water Supply,1,1,31/05/2024,Good,Usman Ali
+GR-2024-0034,PO-2024-0034,National Utilities Corp.,Electricity Bill,1,1,25/05/2024,Good,Ahmad Raza
+GR-2024-0036,PO-2024-0036,National Utilities Corp.,Water Supply,1,1,10/09/2024,Good,Ahmad Raza
+GR-2024-0037,PO-2024-0037,National Utilities Corp.,Gas Bill,1,1,29/02/2024,Good,Bilal Adnan
+GR-2024-0038,PO-2024-0038,ProServ Consulting Group,Audit Services,1,1,21/09/2024,Good,Ahmad Raza
+GR-2024-0039,PO-2024-0039,Premier Raw Materials Inc.,Steel Sheet 1m²,280,280,22/04/2024,Damaged - partial,Usman Ali
+GR-2024-0040,PO-2024-0040,Premier Raw Materials Inc.,PVC Pipe 3m,226,226,17/11/2024,Damaged - partial,Zainab Mir
+GR-2024-0041,PO-2024-0041,Premier Raw Materials Inc.,Steel Sheet 1m²,234,234,16/11/2024,Good,Zainab Mir
+GR-2024-0042,PO-2024-0042,Green Planet Cleaning Co.,Disinfectant Spray,90,90,26/05/2024,Good,Ahmad Raza
+GR-2024-0043,PO-2024-0043,National Utilities Corp.,Internet Service,1,1,09/03/2024,Good,Zainab Mir
+GR-2024-0044,PO-2024-0044,National Utilities Corp.,Electricity Bill,1,1,28/03/2024,Damaged - partial,Ahmad Raza
+GR-2024-0046,PO-2024-0046,Premier Raw Materials Inc.,Copper Wire Spool,497,497,03/04/2024,Good,Zainab Mir
+GR-2024-0047,PO-2024-0047,Apex Office Supplies Ltd.,Whiteboard Marker,49,49,06/05/2024,Good,Zainab Mir
+GR-2024-0048,PO-2024-0048,Horizon IT Equipment Co.,Network Switch,16,16,22/02/2024,Damaged - partial,Usman Ali
+GR-2024-0049,PO-2024-0049,ProServ Consulting Group,Audit Services,1,1,31/03/2024,Damaged - partial,Zainab Mir
+GR-2024-0050,PO-2024-0050,Horizon IT Equipment Co.,Network Switch,14,14,19/03/2024,Good,Usman Ali

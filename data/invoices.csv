@@ -1,0 +1,46 @@
+invoice_number,po_number,vendor_name,item_description,quantity,unit_price,subtotal,tax_rate,tax_amount,grand_total,invoice_date,payment_terms,scenario,expected_anomaly
+INV-2024-0001,,ProServ Consulting Group,Consulting Day Rate,5,1602.01,8010.05,0.1,801.01,8811.06,10/04/2024,Net 30,missing_po,No PO reference number on invoice
+INV-2024-0002,PO-2024-0002,ProServ Consulting Group,Training Session,1,634.09,634.09,0.1,63.41,697.5,12/05/2024,Net 45,quantity_overbill,Invoice claims 1 units; GR shows 1 received
+INV-2024-0003,PO-2024-0004,Horizon IT Equipment Co.,Network Switch,9,1628.39,14655.51,0.1,1465.55,16121.06,27/01/2024,Net 45,correct,
+INV-2024-0004,PO-2024-0004,ProServ Consulting Group,Audit Services,5,1199.66,5998.3,0.1,599.83,6598.13,12/07/2024,Net 30,duplicate_submission,Duplicate: PO reference PO-2024-0004 already invoiced
+INV-2024-0005,PO-2024-0006,Apex Office Supplies Ltd.,A4 Paper Ream,144,68.56,9872.64,0.1,987.26,10859.9,17/06/2024,Net 30,quantity_overbill,Invoice claims 144 units; GR shows 101 received
+INV-2024-0006,PO-2024-0007,ProServ Consulting Group,Consulting Day Rate,7,854.6,5982.2,0.1,598.22,6580.42,30/06/2024,2/10 Net 30,correct,
+INV-2024-0007,PO-2024-0008,Green Planet Cleaning Co.,Floor Cleaner 5L,10,82.74,827.4,0.1,82.74,910.14,04/07/2024,Net 30,correct,
+INV-2024-0008,PO-2024-0009,TechCore Solutions Pvt.,"Monitor 24""",9,934.15,8407.35,0.1,840.74,9248.09,24/07/2024,Net 45,correct,
+INV-2024-0009,PO-2024-0011,ProServ Consulting Group,Legal Advisory Fee,3,3195.67,9587.01,0.1,958.7,10545.71,24/06/2024,2/10 Net 30,price_mismatch,Unit price inflated by 24% above agreed rate
+INV-2024-0010,PO-2024-0012,Horizon IT Equipment Co.,Laptop,8,1652.52,13220.16,0.1,1322.02,14542.18,08/07/2024,Due on Receipt,correct,
+INV-2024-0011,PO-2024-0013,Green Planet Cleaning Co.,Disinfectant Spray,77,106.4,8192.8,0.1,819.28,9012.08,12/07/2024,Net 45,correct,
+INV-2024-0012,PO-2024-0014,ProServ Consulting Group,Training Session,8,1142.92,9143.36,0.1,914.34,10057.7,17/04/2024,Net 45,correct,
+INV-2024-0013,PO-2024-0008,ProServ Consulting Group,Training Session,10,2297.3,22973.0,0.1,2297.3,25270.3,18/05/2024,Net 45,duplicate_submission,Duplicate: PO reference PO-2024-0008 already invoiced
+INV-2024-0014,PO-2024-0004,Premier Raw Materials Inc.,Steel Sheet 1m²,406,52.14,21168.84,0.1,2116.88,23285.72,31/03/2024,Net 45,duplicate_submission,Duplicate: PO reference PO-2024-0004 already invoiced
+INV-2024-0015,PO-2024-0017,ProServ Consulting Group,Training Session,10,785.87,7858.7,0.1,785.87,8644.57,14/08/2024,2/10 Net 30,correct,
+INV-2024-0016,PO-2024-0018,National Utilities Corp.,Electricity Bill,1,2108.79,2108.79,0.1,210.88,2319.67,03/11/2024,Net 60,correct,
+INV-2024-0017,PO-2024-0019,ProServ Consulting Group,Consulting Day Rate,5,2456.44,12282.2,0.1,1228.22,13510.42,27/09/2024,Net 30,correct,
+INV-2024-0018,PO-2024-0020,ProServ Consulting Group,Legal Advisory Fee,9,4606.83,41461.47,0.1,4146.15,45607.62,02/07/2024,2/10 Net 30,correct,
+INV-2024-0019,PO-2024-0021,TechCore Solutions Pvt.,PVC Pipe 3m,211,388.38,81948.18,0.1,8194.82,90143.0,22/10/2024,2/10 Net 30,vendor_mismatch,Invoice vendor 'TechCore Solutions Pvt.' ≠ PO vendor 'Premier Raw Materials Inc.'
+INV-2024-0020,PO-2024-0020,Apex Office Supplies Ltd.,File Folders,14,13.39,187.46,0.1,18.75,206.21,06/08/2024,Net 60,duplicate_submission,Duplicate: PO reference PO-2024-0020 already invoiced
+INV-2024-0021,PO-2024-0022,TechCore Solutions Pvt.,USB Hub,19,1896.55,36034.45,0.1,3603.44,39637.89,13/03/2024,Due on Receipt,duplicate_submission,Duplicate: PO reference PO-2024-0022 already invoiced
+INV-2024-0022,PO-2024-0025,Green Planet Cleaning Co.,Disinfectant Spray,74,442.26,32727.24,0.1,3272.72,35999.96,13/05/2024,Net 60,round_amount,Suspicious round total amount
+INV-2024-0023,PO-2024-0026,National Utilities Corp.,Water Supply,1,538.81,538.81,0.1,53.88,592.69,22/05/2024,Net 30,correct,
+INV-2024-0024,,Green Planet Cleaning Co.,Disinfectant Spray,80,34.22,2737.6,0.1,273.76,3011.36,11/03/2024,Net 30,missing_po,No PO reference number on invoice
+INV-2024-0025,PO-2024-0028,TechCore Solutions Pvt.,Laptop,11,188.17,2069.87,0.1,206.99,2276.86,21/05/2024,Net 60,correct,
+INV-2024-0026,PO-2024-0029,ProServ Consulting Group,Legal Advisory Fee,9,1321.32,11891.88,0.1,1189.19,13081.07,18/11/2024,2/10 Net 30,price_mismatch,Unit price inflated by 21% above agreed rate
+INV-2024-0027,PO-2024-0030,National Utilities Corp.,Water Supply,1,909.05,909.05,0.1,90.91,999.96,29/03/2024,Due on Receipt,price_mismatch,Unit price inflated by 24% above agreed rate
+INV-2024-0028,PO-2024-0031,Green Planet Cleaning Co.,Trash Bags 100pc,64,105.02,6721.28,0.1,672.13,7393.41,22/02/2024,Net 30,correct,
+INV-2024-0029,PO-2024-0032,Apex Office Supplies Ltd.,Stapler,47,23.65,1111.55,0.1,111.16,1222.71,15/05/2024,2/10 Net 30,quantity_overbill,Invoice claims 47 units; GR shows 37 received
+INV-2024-0030,PO-2024-0033,National Utilities Corp.,Water Supply,1,979.93,979.93,0.1,97.99,1077.92,29/05/2024,Net 30,correct,
+INV-2024-0031,PO-2024-0006,National Utilities Corp.,Electricity Bill,1,2913.19,2913.19,0.1,291.32,3204.51,26/05/2024,Net 45,duplicate_submission,Duplicate: PO reference PO-2024-0006 already invoiced
+INV-2024-0032,,National Utilities Corp.,Water Supply,1,2794.25,2794.25,0.1,279.43,3073.68,19/09/2024,Net 60,missing_po,No PO reference number on invoice
+INV-2024-0033,PO-2024-0037,National Utilities Corp.,Gas Bill,1,1030.78,1030.78,0.1,103.08,1133.86,21/02/2024,2/10 Net 30,correct,
+INV-2024-0034,PO-2024-0038,ProServ Consulting Group,Audit Services,1,725.64,725.64,0.1,72.56,798.2,25/09/2024,2/10 Net 30,correct,
+INV-2024-0035,PO-2024-0039,Premier Raw Materials Inc.,Steel Sheet 1m²,280,67.65,18942.0,0.1,1894.2,20836.2,27/04/2024,Net 30,correct,
+INV-2024-0036,PO-2024-0040,Premier Raw Materials Inc.,PVC Pipe 3m,226,86.35,19515.1,0.1,1951.51,21466.61,15/11/2024,Net 45,correct,
+INV-2024-0037,PO-2024-0041,Premier Raw Materials Inc.,Steel Sheet 1m²,234,338.97,79318.98,0.07,5552.33,84871.31,16/11/2024,2/10 Net 30,tax_error,Tax rate 7% instead of expected 10%
+INV-2024-0038,PO-2024-0042,Green Planet Cleaning Co.,Disinfectant Spray,90,88.78,7990.2,0.1,799.02,8789.22,23/05/2024,Net 60,correct,
+INV-2024-0039,PO-2024-0043,National Utilities Corp.,Internet Service,1,1085.3,1085.3,0.15,162.79,1248.09,17/03/2024,Net 30,tax_error,Tax rate 15% instead of expected 10%
+INV-2024-0040,PO-2024-0044,National Utilities Corp.,Electricity Bill,1,1616.48,1616.48,0.1,161.65,1778.13,15/04/2024,Net 60,correct,
+INV-2024-0041,PO-2024-0046,Premier Raw Materials Inc.,Copper Wire Spool,497,341.79,169869.63,0.1,16986.96,186856.59,15/04/2024,Net 60,correct,
+INV-2024-0042,PO-2024-0047,Apex Office Supplies Ltd.,Whiteboard Marker,49,25.43,1246.07,0.1,124.61,1370.68,17/05/2024,Net 60,correct,
+INV-2024-0043,PO-2024-0048,Horizon IT Equipment Co.,Network Switch,16,539.69,8635.04,0.15,1295.26,9930.3,26/02/2024,Net 30,tax_error,Tax rate 15% instead of expected 10%
+INV-2024-0044,PO-2024-0049,ProServ Consulting Group,Audit Services,1,515.96,515.96,0.1,51.6,567.56,26/03/2024,Net 60,correct,
+INV-2024-0045,PO-2024-0017,Horizon IT Equipment Co.,Network Switch,14,1143.77,16012.78,0.1,1601.28,17614.06,01/04/2024,Net 30,duplicate_submission,Duplicate: PO reference PO-2024-0017 already invoiced
